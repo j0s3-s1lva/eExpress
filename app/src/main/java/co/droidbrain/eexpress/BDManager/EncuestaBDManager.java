@@ -5,14 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 
 /**
+ * Clase para realizar acciones en la base de datos
  * Created by j0s3 on 11/06/14.
  */
 public class EncuestaBDManager {
@@ -98,15 +97,42 @@ public class EncuestaBDManager {
 * Función para guardar el título de las encuestas en la base de datos local, también se toma la fecha de es momento
 *
 */
-    public void guardarTitulo(String titulo, int preguntas) throws Exception {
-        ContentValues cv = new ContentValues();
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat fecha = new SimpleDateFormat("dd-MM-yyyy");
+    public boolean guardarTitulo(String titulo, int preguntas) throws Exception {
+        // prueba de validación, para evitar registros duplicados,
+        // si el cursor está vacío es porque el dato que se va guardar no se encuentra aún en la base de datos
+        String[] arg = new String[] {titulo};
+        //iniciamos con una consulta general para comprobar si la tabla tiene algún dato. Si no lo tiene aún... insertamos
+        Cursor cursor = nBD.rawQuery("SELECT * FROM "+N_TABLA[0], null);
+        if (cursor.getCount() == 0) {
+            ContentValues cv = new ContentValues();
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat fecha = new SimpleDateFormat("dd-MM-yyyy");
 
-        cv.put(TITULO, titulo);
-        cv.put(PREGUNTAS, preguntas);
-        cv.put(FECHA, fecha.format(c.getTime()));
-        nBD.insert(N_TABLA[0], null, cv);
+            cv.put(TITULO, titulo);
+            cv.put(PREGUNTAS, preguntas);
+            cv.put(FECHA, fecha.format(c.getTime()));
+            nBD.insert(N_TABLA[0], null, cv);
+
+            return true;
+        }else {
+        // si el paso anterior indica que sí tiene datos,
+        // hacemos una nueva consulta para verificar que el dato a ingresar no se encuentre dentro de la tabla
+            Cursor crs = nBD.rawQuery("SELECT titulo FROM "+N_TABLA[0]+" WHERE titulo =? ", arg);
+            if (crs.getCount() == 0) {
+                ContentValues cv = new ContentValues();
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat fecha = new SimpleDateFormat("dd-MM-yyyy");
+
+                cv.put(TITULO, titulo);
+                cv.put(PREGUNTAS, preguntas);
+                cv.put(FECHA, fecha.format(c.getTime()));
+                nBD.insert(N_TABLA[0], null, cv);
+
+                return true;
+            }
+
+            return false;
+        }
     }
 /*
 * Función para guardar cada pregunta con sus respectivas opciones en la bd local.
@@ -124,10 +150,10 @@ public class EncuestaBDManager {
         Cursor id_pregunta = obtenerIdPregunta();
         id_pregunta.moveToFirst();
 
-        Log.i("hola", "estoy por aquí 1 - "+opciones.size());
+        //Log.i("hola", "estoy por aquí 1 - "+opciones.size());
 
         for (int i = 0; i < opciones.size(); i++) {
-            Log.i("hola", "estoy por aquí "+opciones.get(i));
+            //Log.i("hola", "estoy por aquí "+opciones.get(i));
             ContentValues c = new ContentValues();
             String op = opciones.get(i);
             c.put(TEXTO_OPCION, op);

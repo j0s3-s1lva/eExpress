@@ -3,7 +3,8 @@
 
     <string name="app_name">eExpress</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Ver encuestas</string>
+    <string name="ver_encuestas">Ver encuestas</string>
+    <string name="finalizar_encuesta">Finalizar</string>
     <string name="title_activity_encuesta">EncuestaActivity</string>
     <string name="consumir_rest">Consumir</string>
 

@@ -1,6 +1,5 @@
 package co.droidbrain.eexpress.app;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
@@ -14,7 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -34,35 +32,51 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
         setContentView(R.layout.activity_main);
         lista_encuesta = (ListView)findViewById(android.R.id.list);
 
-
-
+        JSONParseEncuestas json = new JSONParseEncuestas(this);
+        try {
+            json.readAndParseJSONEncuestas();
+        }catch (JSONException e) {
+            Log.e("ERROR", e.toString());
+        }finally {
+            //Se inicializa el loader para empezar la carga de los datos
+            getLoaderManager().initLoader(0,null,this);
+            mAdapter = new SimpleCursorAdapter(this,
+                    R.layout.listview_encuestas_layout,
+                    null,
+                    new String[] {"_id", EncuestaBDManager.PREGUNTAS},
+                    new int[] {R.id.titulo, R.id.cantidad}, 0);
+            lista_encuesta.setAdapter(mAdapter);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            mAdapter = new SimpleCursorAdapter(getBaseContext(),
-                    R.layout.listview_item_layout,
-                    null,
-                    new String[] {"_id", EncuestaBDManager.PREGUNTAS},
-                    new int[] {R.id.titulo, R.id.cantidad}, 0);
-            lista_encuesta.setAdapter(mAdapter);
-            getLoaderManager().initLoader(0,null,this);
-            return true;
+
+        switch (id) {
+            case R.id.ver_encuestas:
+                //Se reinicia el loader para volver a cargar los datos
+                getLoaderManager().restartLoader(0,null,this);
+                mAdapter = new SimpleCursorAdapter(this,
+                        R.layout.listview_encuestas_layout,
+                        null,
+                        new String[] {"_id", EncuestaBDManager.PREGUNTAS},
+                        new int[] {R.id.titulo, R.id.cantidad}, 0);
+                lista_encuesta.setAdapter(mAdapter);
+            break;
+            case R.id.consumir_rest:
+                JSONParseEncuestas json = new JSONParseEncuestas(this);
+                try {
+                    json.readAndParseJSONEncuestas();
+                }catch (JSONException e) {
+                    Log.e("ERROR", e.toString());
+                }
+             break;
         }
-        if (id == R.id.consumir_rest) {
-            lista_encuesta.setAdapter(null);
-            JSONParseEncuestas json = new JSONParseEncuestas(this);
-            try {
-                json.readAndParseJSONEncuestas();
-            }catch (JSONException e) {
-                Log.e("ERROR", e.toString());
-            }
-            return true;
-        }
+
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
