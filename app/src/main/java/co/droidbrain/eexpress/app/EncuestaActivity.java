@@ -34,12 +34,6 @@ public class EncuestaActivity extends FragmentActivity {
             adapter.addFragment(PreguntasEeFragment.newInstance(Color.CYAN, i));
         }
 
-
-       /* adapter.addFragment(PreguntasEeFragment.newInstance(android.R.color.holo_orange_dark, 0));
-        adapter.addFragment(PreguntasEeFragment.newInstance(android.R.color.darker_gray, 1));
-        adapter.addFragment(PreguntasEeFragment.newInstance(android.R.color.holo_blue_bright, 2));
-        adapter.addFragment(PreguntasEeFragment.newInstance(android.R.color.holo_blue_dark, 3));
-        adapter.addFragment(PreguntasEeFragment.newInstance(android.R.color.holo_green_light, 4));*/
         this.pager.setAdapter(adapter);
     }
 
