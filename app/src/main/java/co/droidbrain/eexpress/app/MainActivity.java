@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import org.json.JSONException;
 
@@ -30,6 +32,9 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.setTitle("Encuesta Express");
+
         lista_encuesta = (ListView)findViewById(android.R.id.list);
 
         JSONParseEncuestas json = new JSONParseEncuestas(this);
@@ -81,15 +86,20 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         //super.onListItemClick(l, v, position, id);
+        TextView titulo = (TextView) v.findViewById(R.id.titulo);
+        TextView preguntas = (TextView)v.findViewById(R.id.cantidad);
 
-        String itemValue = Long.toString(l.getSelectedItemId());
-        Intent formato = new Intent(MainActivity.this, EncuestaActivity.class);
+        int num_preguntas = Integer.parseInt(preguntas.getText().toString());
+        String titulo_encuesta = titulo.getText().toString().trim();
 
+        Intent intent = new Intent(MainActivity.this, EncuestaActivity.class);
+        //Log.i("CADENA", "ESTO es: "+);
         Bundle bolsa = new Bundle();
-        bolsa.putString("TITULO", itemValue);
+        bolsa.putString("TITULO", titulo_encuesta);
+        bolsa.putInt("PREGUNTAS", num_preguntas);
 
-        formato.putExtras(bolsa);
-        startActivity(formato);
+        intent.putExtras(bolsa);
+        startActivity(intent);
 
     }
 

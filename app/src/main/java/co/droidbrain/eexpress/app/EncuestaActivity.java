@@ -1,25 +1,46 @@
 package co.droidbrain.eexpress.app;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 
-public class EncuestaActivity extends Activity {
-    TextView titulo, enunciado;
+public class EncuestaActivity extends FragmentActivity {
+    ViewPager pager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_encuesta);
+        setContentView(R.layout.vista_viewpager);
 
-        titulo = (TextView)findViewById(R.id.titulo_encuesta);
-        enunciado = (TextView)findViewById(R.id.enunciado);
+
+        this.pager = (ViewPager) this.findViewById(R.id.pager);
 
         Bundle bolsa = getIntent().getExtras();
-        titulo.setText(bolsa.getString("TITULO"));
+        this.setTitle(bolsa.getString("TITULO"));
+
+        int n = bolsa.getInt("PREGUNTAS");
+
+        CargadorViewPager adapter = new CargadorViewPager(getSupportFragmentManager());
+
+        for (int i = 0; i < n; i++) {
+            adapter.addFragment(PreguntasEeFragment.newInstance(Color.CYAN, i));
+        }
+
+
+       /* adapter.addFragment(PreguntasEeFragment.newInstance(android.R.color.holo_orange_dark, 0));
+        adapter.addFragment(PreguntasEeFragment.newInstance(android.R.color.darker_gray, 1));
+        adapter.addFragment(PreguntasEeFragment.newInstance(android.R.color.holo_blue_bright, 2));
+        adapter.addFragment(PreguntasEeFragment.newInstance(android.R.color.holo_blue_dark, 3));
+        adapter.addFragment(PreguntasEeFragment.newInstance(android.R.color.holo_green_light, 4));*/
+        this.pager.setAdapter(adapter);
     }
 
 
@@ -40,5 +61,16 @@ public class EncuestaActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        // Return to previous page when we press back button
+        if (this.pager.getCurrentItem() == 0)
+            super.onBackPressed();
+        else
+            this.pager.setCurrentItem(this.pager.getCurrentItem() - 1);
+
     }
 }
