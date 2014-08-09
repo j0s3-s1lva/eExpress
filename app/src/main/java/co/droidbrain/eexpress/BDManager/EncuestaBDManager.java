@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 
 /**
  * Clase para realizar acciones en la base de datos
@@ -87,6 +89,7 @@ public class EncuestaBDManager {
         nHelper.close();
     }
 
+    //Se obtiene el id del ultimo registro almacenado. id_encuesta/id_pregunta
     public Cursor obtenerIdEncuesta(){
         return nBD.rawQuery("SELECT "+ID_ENCUESTA+" FROM "+N_TABLA[0]+" ORDER BY "+ID_ENCUESTA+" DESC LIMIT 1", null);
     }
@@ -95,7 +98,6 @@ public class EncuestaBDManager {
     }
 /*
 * Función para guardar el título de las encuestas en la base de datos local, también se toma la fecha de es momento
-*
 */
     public boolean guardarTitulo(String titulo, int preguntas) throws Exception {
         // prueba de validación, para evitar registros duplicados,
@@ -165,5 +167,45 @@ public class EncuestaBDManager {
 
     public Cursor getNombreEncuestas() {
         return nBD.rawQuery("SELECT "+TITULO+" AS _id, "+PREGUNTAS+" FROM "+N_TABLA[0], null);
+    }
+
+/*
+* Método que obtiene las preguntas que hacen parte de una encuesta.
+*/
+
+    public ArrayList<ArrayList<String>> getPregEncuesta(String t) {
+        ArrayList<ArrayList<String>> total = new ArrayList<ArrayList<String>>();
+
+        ArrayList<String> pregunta = new ArrayList<String>();
+        ArrayList<String> opciones = new ArrayList<String>();
+
+        String[] titulo = new String[] {t};
+
+        Cursor c = nBD.rawQuery("SELECT "+ID_ENCUESTA+" FROM "+N_TABLA[0]+" WHERE "+TITULO+"= ?", titulo);
+        c.moveToFirst();
+        int id = c.getInt(0);
+        int i = 0;
+
+        c = nBD.rawQuery("SELECT "+ID_PREGUNTA+","+TEXTO_PREGUNTA+" FROM "+N_TABLA[1]+" WHERE "+ID_ENCUESTA+"="+id, null);
+
+
+        int texto_pregunta = c.getColumnIndex(TEXTO_PREGUNTA);
+        int id_pregunta = c.getColumnIndex(ID_PREGUNTA);
+
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()){
+            pregunta.add(c.getString(texto_pregunta));
+
+            Cursor op = nBD.rawQuery("SELECT "+TEXTO_OPCION+" FROM "+N_TABLA[2]+" WHERE "+ID_ENCUESTA+"="+id+" AND "+ID_PREGUNTA+"="+c.getString(id_pregunta), null);
+            int texto_opciones = op.getColumnIndex(TEXTO_OPCION);
+            for (op.moveToFirst(); !op.isAfterLast(); op.moveToNext()){
+                opciones.add(op.getString(texto_opciones));
+                //Log.i("AÑADIDO", "Añadido: "+op.getString(op.getColumnIndex(TEXTO_OPCION)));
+            }
+            total.add((ArrayList<String>) opciones.clone());
+            opciones.clear();
+        }
+        total.add(0,pregunta);
+
+        return total;
     }
 }

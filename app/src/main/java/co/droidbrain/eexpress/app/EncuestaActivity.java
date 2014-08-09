@@ -2,6 +2,7 @@ package co.droidbrain.eexpress.app;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -11,30 +12,54 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import co.droidbrain.eexpress.BDManager.EncuestaBDManager;
+
 
 public class EncuestaActivity extends FragmentActivity {
     ViewPager pager = null;
+    EncuestaBDManager bdManager;
+    String titulo_encuesta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vista_viewpager);
 
-
         this.pager = (ViewPager) this.findViewById(R.id.pager);
+        bdManager = new EncuestaBDManager(getApplicationContext());
 
         Bundle bolsa = getIntent().getExtras();
-        this.setTitle(bolsa.getString("TITULO"));
 
-        int n = bolsa.getInt("PREGUNTAS");
+        titulo_encuesta = bolsa.getString("TITULO");
+        int n_preguntas = bolsa.getInt("PREGUNTAS");
 
+        this.setTitle(titulo_encuesta);
+        ArrayList<ArrayList<String>> datos = obtenerPreguntas(titulo_encuesta);
+        ArrayList<String> preguntas = datos.get(0);
+        datos.remove(0);
         CargadorViewPager adapter = new CargadorViewPager(getSupportFragmentManager());
 
-        for (int i = 0; i < n; i++) {
-            adapter.addFragment(PreguntasEeFragment.newInstance(Color.CYAN, i));
+        for (int i = 0; i < n_preguntas; i++) {
+            adapter.addFragment(PreguntasEeFragment.newInstance(preguntas.get(i), i+1, n_preguntas, datos.get(i)));
         }
 
         this.pager.setAdapter(adapter);
+    }
+
+    public ArrayList<ArrayList<String>> obtenerPreguntas(String nombre) {
+
+        ArrayList<ArrayList<String>> preg = new ArrayList<ArrayList<String>>();
+
+        try {
+            bdManager.abrirBD();
+            preg = bdManager.getPregEncuesta(nombre);
+            bdManager.cerrarBD();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return preg;
     }
 
 

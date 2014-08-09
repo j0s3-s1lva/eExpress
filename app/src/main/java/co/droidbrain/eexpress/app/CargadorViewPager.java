@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by j0s3 on 7/08/14.
  */
-public class CargadorViewPager extends FragmentStatePagerAdapter {
+public class CargadorViewPager extends FragmentPagerAdapter {
     // Lista de fragments con que se usarán con el ViewPager
     List<Fragment> fragments;
 

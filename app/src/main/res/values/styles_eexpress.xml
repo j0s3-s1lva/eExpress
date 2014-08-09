@@ -19,7 +19,7 @@
 
 <resources>
 
-    <style name="Theme.Eexpress" parent="@android:style/Theme.Holo.Light">
+    <style name="Theme.Eexpress" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarItemBackground">@drawable/selectable_background_eexpress</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Eexpress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Eexpress</item>
@@ -30,44 +30,46 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_eexpress</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Eexpress</item>
         
-        
+                <!-- Light.DarkActionBar specific -->
+        <item name="android:actionBarWidgetTheme">@style/Theme.Eexpress.Widget</item>
+
     </style>
 
-    <style name="ActionBar.Solid.Eexpress" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+    <style name="ActionBar.Solid.Eexpress" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/ab_background_textured_eexpress</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_eexpress</item>
         <item name="android:backgroundSplit">@drawable/ab_background_textured_eexpress</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Eexpress</item>
     </style>
 
-    <style name="ActionBar.Transparent.Eexpress" parent="@android:style/Widget.Holo.Light.ActionBar">
+    <style name="ActionBar.Transparent.Eexpress" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:background">@drawable/ab_transparent_eexpress</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Eexpress</item>
     </style>
 
-    <style name="PopupMenu.Eexpress" parent="@android:style/Widget.Holo.Light.ListPopupWindow">
+    <style name="PopupMenu.Eexpress" parent="@android:style/Widget.Holo.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_eexpress</item>	
     </style>
 
-    <style name="DropDownListView.Eexpress" parent="@android:style/Widget.Holo.Light.ListView.DropDown">
+    <style name="DropDownListView.Eexpress" parent="@android:style/Widget.Holo.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable_background_eexpress</item>
     </style>
 
-    <style name="ActionBarTabStyle.Eexpress" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
+    <style name="ActionBarTabStyle.Eexpress" parent="@android:style/Widget.Holo.ActionBar.TabView">
         <item name="android:background">@drawable/tab_indicator_ab_eexpress</item>
     </style>
 
-    <style name="DropDownNav.Eexpress" parent="@android:style/Widget.Holo.Light.Spinner">
+    <style name="DropDownNav.Eexpress" parent="@android:style/Widget.Holo.Spinner">
         <item name="android:background">@drawable/spinner_background_ab_eexpress</item>
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_eexpress</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_eexpress</item>
     </style>
     
-    <style name="ProgressBar.Eexpress" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal">
+    <style name="ProgressBar.Eexpress" parent="@android:style/Widget.Holo.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_eexpress</item>
     </style>
     
-    <style name="ActionButton.CloseMode.Eexpress" parent="@android:style/Widget.Holo.Light.ActionButton.CloseMode">
+    <style name="ActionButton.CloseMode.Eexpress" parent="@android:style/Widget.Holo.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_eexpress</item>
     </style>
 
