@@ -1,16 +1,10 @@
 package co.droidbrain.eexpress.app;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 

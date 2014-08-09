@@ -194,13 +194,14 @@ public class EncuestaBDManager {
 
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()){
             pregunta.add(c.getString(texto_pregunta));
-
+            // Con el id de la pregunta anterior realiza una nueva consulta para obtenre sus opciones
             Cursor op = nBD.rawQuery("SELECT "+TEXTO_OPCION+" FROM "+N_TABLA[2]+" WHERE "+ID_ENCUESTA+"="+id+" AND "+ID_PREGUNTA+"="+c.getString(id_pregunta), null);
             int texto_opciones = op.getColumnIndex(TEXTO_OPCION);
             for (op.moveToFirst(); !op.isAfterLast(); op.moveToNext()){
                 opciones.add(op.getString(texto_opciones));
                 //Log.i("AÑADIDO", "Añadido: "+op.getString(op.getColumnIndex(TEXTO_OPCION)));
             }
+            //mete una copia del ArrayList opciones en "total" y luego borra los datos de "opciones" para luego reutilizarlo en el siguiente ciclo
             total.add((ArrayList<String>) opciones.clone());
             opciones.clear();
         }

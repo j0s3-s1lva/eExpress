@@ -1,46 +1,35 @@
 package co.droidbrain.eexpress.app;
 
 
-import android.app.Activity;
-import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
-import co.droidbrain.eexpress.BDManager.EncuestaBDManager;
 
 /**
  * Created by j0s3 on 6/08/14.
  */
 public class PreguntasEeFragment extends Fragment {
     /**
-     * Key to insert the background color into the mapping of a Bundle.
+     * Key para normbrar las bolsas (Bundle).
      */
     private static final String PREGUNTAS_ENCUESTA = "preguntas";
-
-    /**
-     * Key to insert the index page into the mapping of a Bundle.
-     */
     private static final String INDEX = "index";
     private static final String NUMERO_PREGUNTAS = "n_preguntas";
     private static final String OPCIONES_PREGUNTAS = "opciones";
 
-    private String pregunta; //int color;
+    private String pregunta;
     private int index;
     private int n_preguntas = 0;
     private ArrayList<String> opciones;
 
     /**
-     * Instances a new fragment with a background color and an index page.
+     * Constructor que isntancia un nuevo fragment
      *
      * @param preg
      *            Array de preguntas
@@ -51,10 +40,10 @@ public class PreguntasEeFragment extends Fragment {
      */
     public static PreguntasEeFragment newInstance(String preg, int index, int n_preg, ArrayList<String> op) {
 
-        // Instantiate a new fragment
+        // Instaciamos un nuevo fragment
         PreguntasEeFragment fragment = new PreguntasEeFragment();
 
-        // Save the parameters
+        // Guardamos los parámetros
         Bundle bundle = new Bundle();
         bundle.putString(PREGUNTAS_ENCUESTA, preg);
         bundle.putInt(INDEX, index);
@@ -71,7 +60,7 @@ public class PreguntasEeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // Load parameters when the initial creation of the fragment is done
+        // Cargamos los parámetros iniciales
         this.pregunta = (getArguments() != null) ? getArguments().getString(PREGUNTAS_ENCUESTA) : null;
         this.index = (getArguments() != null) ? getArguments().getInt(INDEX) : -1;
         this.n_preguntas = (getArguments() != null) ? getArguments().getInt(NUMERO_PREGUNTAS) : 0;
@@ -83,25 +72,18 @@ public class PreguntasEeFragment extends Fragment {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_preguntas_ee, container, false);
 
-        LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.llCuadroOpciones);
-
+        ListView lista = (ListView) rootView.findViewById(R.id.lvOpciones);
         TextView tvIndex = (TextView) rootView.findViewById(R.id.tvIndex);
         TextView tvPreguntas = (TextView) rootView.findViewById(R.id.tvContador);
 
-        Iterator<String> iterator = opciones.iterator();
+        AdaptadorListOpciones adapter;
+        // Inicializamos el adapter personalizado.
+        adapter = new AdaptadorListOpciones(getActivity(), opciones);
 
         tvIndex.setText(this.pregunta);
         tvPreguntas.setText(this.index+"/"+n_preguntas);
 
-        while(iterator.hasNext()) {
-            TextView opcion = new TextView(getActivity());
-            opcion.setText(iterator.next());
-            linearLayout.addView(opcion);
-        }
-
-
-        // Change the background color
-        //rootView.setBackgroundColor(this.color);
+        lista.setAdapter(adapter);
 
         return rootView;
 

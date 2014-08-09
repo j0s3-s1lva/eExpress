@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,7 +45,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
             //Se inicializa el loader para empezar la carga de los datos
             getLoaderManager().initLoader(0,null,this);
             mAdapter = new SimpleCursorAdapter(this,
-                    R.layout.listview_encuestas_layout,
+                    R.layout.listview_item_encuestas,
                     null,
                     new String[] {"_id", EncuestaBDManager.PREGUNTAS},
                     new int[] {R.id.titulo, R.id.cantidad}, 0);
@@ -63,7 +62,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
                 //Se reinicia el loader para volver a cargar los datos
                 getLoaderManager().restartLoader(0,null,this);
                 mAdapter = new SimpleCursorAdapter(this,
-                        R.layout.listview_encuestas_layout,
+                        R.layout.listview_item_encuestas,
                         null,
                         new String[] {"_id", EncuestaBDManager.PREGUNTAS},
                         new int[] {R.id.titulo, R.id.cantidad}, 0);
